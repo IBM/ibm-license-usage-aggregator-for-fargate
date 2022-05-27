@@ -1,48 +1,39 @@
-<!-- This should be the location of the title of the repository, normally the short name -->
-# repo-template
+# IBM License Usage Aggregator for Fargate
 
-<!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
-<!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
-
-<!-- Not always needed, but a scope helps the user understand in a short sentance like below, why this repo exists -->
 ## Scope
 
-The purpose of this project is to provide a template for new open source repositories.
+AWS ECS Fargate technology allows users to deploy containers in serverless environment and the license of such software needs to be tracked. 
+In case of IBM Certified Containers, license is calculated using [IBM Container Pricing](https://www.ibm.com/software/passportadvantage/containerlicenses.html)
+rules and proper license usage tracing tool needs to be used to have license 
+tracked and that can be achieved with IBM License Usage Logger for Fargate sidecar. 
+This repo provides an example of a tool for aggregation of such license usage logs. 
+This will allow customers to have better understanding by getting daily metrics values for given IBM products based on provided license usage logs.
 
-<!-- A more detailed Usage or detailed explaination of the repository here -->
+
+## Requirements
+
+1. [AWS cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. [Python 3](https://www.python.org/downloads/)
+3. License Service S3 bucket content from your AWS environment
+
 ## Usage
 
-This repository contains some example best practices for open source repositories:
+1. Copy `IBM-License-usage` folder from given License Service S3 bucket to local directory:
 
-* [LICENSE](LICENSE)
-* [README.md](README.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [MAINTAINERS.md](MAINTAINERS.md)
-<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
-* [CHANGELOG.md](CHANGELOG.md)
+   ```aws s3 cp s3://<S3_bucket_name>/IBM-License-usage . --recursive```
 
-> These are optional
+2. Run aggregator by
 
-<!-- The following are OPTIONAL, but strongly suggested to have in your repository. -->
-* [dco.yml](.github/dco.yml) - This enables DCO bot for you, please take a look https://github.com/probot/dco for more details.
-* [travis.yml](.travis.yml) - This is a example `.travis.yml`, please take a look https://docs.travis-ci.com/user/tutorial/ for more details.
+   (Optional) Enable DEBUG mode by setting DEBUG = True inside the script.
 
-These may be copied into a new or existing project to make it easier for developers not on a project team to collaborate.
+   ```python IBM_license_usage_aggregator_for_fargate.py <s3_license_usage_directory> <output_directory>```
 
-<!-- A notes section is useful for anything that isn't covered in the Usage or Scope. Like what we have below. -->
+4. Get csv files with daily aggregated license usage from the `output-directory`
+
+
 ## Notes
 
-**NOTE: While this boilerplate project uses the Apache 2.0 license, when
-establishing a new repo using this template, please use the
-license that was approved for your project.**
-
-**NOTE: This repository has been configured with the [DCO bot](https://github.com/probot/dco).
-When you set up a new repository that uses the Apache license, you should
-use the DCO to manage contributions. The DCO bot will help enforce that.
-Please contact one of the IBM GH Org stewards.**
-
-<!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->
-If you have any questions or issues you can create a new [issue here][issues].
+**NOTE: This repository has been configured with the [DCO bot](https://github.com/probot/dco).**
 
 Pull requests are very welcome! Make sure your patches are well tested.
 Ideally create a topic branch for every separate change you make. For
@@ -63,15 +54,7 @@ If you would like to see the detailed LICENSE click [here](LICENSE).
 
 ```text
 #
-# Copyright 2020- IBM Inc. All rights reserved
+# Copyright 2022 IBM Inc. All rights reserved
 # SPDX-License-Identifier: Apache2.0
 #
 ```
-## Authors
-
-Optionally, you may include a list of authors, though this is redundant with the built-in
-GitHub list of contributors.
-
-- Author: New OpenSource IBMer <new-opensource-ibmer@ibm.com>
-
-[issues]: https://github.com/IBM/repo-template/issues/new

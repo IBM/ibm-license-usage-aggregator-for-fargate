@@ -1,0 +1,2 @@
+date,name,id,metricName,metricQuantity,clusterId
+2022-02-22,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,1,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster2

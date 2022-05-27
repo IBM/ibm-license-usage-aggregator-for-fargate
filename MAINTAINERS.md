@@ -1,3 +1,4 @@
 # MAINTAINERS
 
-Christopher Ferris - chrisfer@us.ibm.com
+- Lukasz Matyasik - lukasz.matyasik@pl.ibm.com
+- Piotr Wodecki - Piotr.Wodecki@ibm.com

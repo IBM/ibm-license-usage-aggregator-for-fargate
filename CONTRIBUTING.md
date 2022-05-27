@@ -1,28 +1,23 @@
-## Contributing In General
-Our project welcomes external contributions. If you have an itch, please feel
-free to scratch it.
 
-To contribute code or documentation, please submit a **FIXME** [pull request](https://github.com/ibm/repo-template/pulls).
+# Contributing guidelines
 
-A good way to familiarize yourself with the codebase and contribution process is
-to look for and tackle low-hanging fruit in the **FIXME** [issue tracker](https://github.com/ibm/repo-template/issues).
-Before embarking on a more ambitious contribution, please quickly [get in touch](#communication) with us.
+## Contributing A Patch
 
-**Note: We appreciate your effort, and want to avoid a situation where a contribution
-requires extensive rework (by you or by us), sits in backlog for a long time, or
-cannot be accepted at all!**
+1. Submit an issue describing your proposed change to the repo in question.
+1. The repo owners will respond to your issue promptly.
+1. Fork the desired repo, develop and test your code changes.
+1. Commit your changes with DCO
+1. Submit a pull request.
 
-### Proposing new features
+## Issue and Pull Request Management
 
-If you would like to implement a new feature, please **FIXME** [raise an issue](https://github.com/ibm/repo-template/issues)
-before sending a pull request so the feature can be discussed. This is to avoid
-you wasting your valuable time working on a feature that the project developers
-are not interested in accepting into the code base.
+Anyone may comment on issues and submit reviews for pull requests. However, in
+order to be assigned an issue or pull request, you must be a member of the
+[IBM](https://github.com/ibm) GitHub organization.
 
-### Fixing bugs
+Repo maintainers can assign you an issue or pull request by leaving a
+`/assign <your Github ID>` comment on the issue or pull request.
 
-If you would like to fix a bug, please **FIXME** [raise an issue](https://github.com/ibm/repo-template/issues) before sending a
-pull request so it can be tracked.
 
 ### Merge approval
 
@@ -68,17 +63,10 @@ local git repository using the following command:
 git commit -s
 ```
 
-## Communication
-**FIXME** Please feel free to connect with us on our [Slack channel](link).
+## Linting
 
-## Setup
-**FIXME** Please add any special setup instructions for your project to help the developer
-become productive quickly.
+- PEP8
 
-## Testing
-**FIXME** Please provide information that helps the developer test any changes they make
-before submitting.
+## Verify
 
-## Coding style guidelines
-**FIXME** Optional, but recommended: please share any specific style guidelines you might
-have for your project.
+Make sure that `pytest` is passing.

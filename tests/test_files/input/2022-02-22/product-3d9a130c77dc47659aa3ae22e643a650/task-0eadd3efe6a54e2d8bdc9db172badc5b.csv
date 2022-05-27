@@ -1,0 +1,2 @@
+Timestamp,ProductName,ProductId,Metric,vCPU,ClusterId,LoggerVersion
+2022-02-22T16:30:00Z,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,PROCESSOR_VALUE_UNIT,0.5,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster,1.0
