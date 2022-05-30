@@ -20,13 +20,13 @@ This will allow customers to have better understanding by getting daily metrics 
 
 1. Copy `IBM-License-usage` folder from given License Service S3 bucket to local directory:
 
-   ```aws s3 cp s3://<S3_bucket_name>/IBM-License-usage . --recursive```
+   ```aws s3 cp s3://<S3_bucket_name>/IBM-License-usage <s3_license_usage_directory> --recursive```
 
 2. Run aggregator by
 
    (Optional) Enable DEBUG mode by setting DEBUG = True inside the script.
 
-   ```python IBM_license_usage_aggregator_for_fargate.py <s3_license_usage_directory> <output_directory>```
+   ```python scripts/IBM_license_usage_aggregator_for_fargate.py <s3_license_usage_directory> <output_directory>```
 
 4. Get csv files with daily aggregated license usage from the `output-directory`
 
