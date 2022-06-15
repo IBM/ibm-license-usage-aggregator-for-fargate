@@ -15,16 +15,16 @@ DEBUG = False
 def _log(message):
     date_time_obj = datetime.datetime.now()
     timestamp_str = date_time_obj.strftime('%Y-%m-%d %H:%M:%S')
-    return print(timestamp_str + ' - ' + str(message))
+    return print(f'{timestamp_str} - {message}')
 
 
 def _debug(message):
     if DEBUG:
-        _log(str('DEBUG: ' + message))
+        _log(str(f'DEBUG: {message}'))
 
 
 def _info(message):
-    _log(str('INFO: ' + message))
+    _log(str(f'INFO: {message}'))
 
 
 def _read_storage(s3_license_usage_directory):
@@ -35,34 +35,34 @@ def _read_storage(s3_license_usage_directory):
     end_date = days[-1]
 
     for day in os.listdir(s3_license_usage_directory):
-        _info('Aggregation started for day - ' + day)
+        _info(f'Aggregation started for day - {day}')
 
         for product in os.listdir(os.path.join(s3_license_usage_directory, day)):
-            _info('Aggregation started for product - ' + product)
+            _info(f'Aggregation started for product - {product}')
             values = {}
 
             for task in os.listdir(os.path.join(s3_license_usage_directory, day, product)):
-                _debug('Aggregation started for task - ' + task)
+                _debug(f'Aggregation started for task - {task}')
                 _read_task(day, product, s3_license_usage_directory, task, values)
-                _debug('Aggregation finished for task - ' + task)
+                _debug(f'Aggregation finished for task - {task}')
 
-            _debug('Aggregation finished for product - ' + product)
+            _debug(f'Aggregation finished for product - {product}')
 
             if values:
                 for prod in values:
                     daily_hwm = int(math.ceil(max(values[prod].values())))
-                    _debug('HWM calculated= ' + str(prod) + ' - ' + str(daily_hwm))
+                    _debug(f'HWM calculated = {prod}  - {daily_hwm}')
                     csv_row = [day, prod[0], prod[1], prod[2], daily_hwm, prod[3]]
                     output_csv_rows.append(csv_row)
 
-        _debug('Aggregation finished for day - ' + day)
+        _debug('Aggregation finished for day - {day}')
 
     return [output_csv_rows, start_date, end_date]
 
 
 def _read_task(day, product, s3_license_usage_directory, task, values):
     task_path = os.path.join(s3_license_usage_directory, day, product, task)
-    _debug('Reading file - ' + task_path)
+    _debug(f'Reading file - {task_path}')
     csvreader = csv.reader(open(task_path))
     # skip header
     next(csvreader)
@@ -91,7 +91,7 @@ def _prepare_daily_hwm_files(csv_rows):
     csv_files = {}
     for row in output_csv_rows:
         file_name = '_'.join(('products_daily', csv_rows[1], csv_rows[2], row[5].replace(':', '_').replace('/', '_')))
-        _debug('Preparing content for filename = {}' + file_name)
+        _debug(f'Preparing content for filename = {file_name}')
         if file_name not in csv_files:
             csv_files[file_name] = []
         if row[3] == 'PROCESSOR_VALUE_UNIT':
@@ -105,7 +105,7 @@ def _export_daily_hwm_files(csv_files, output_directory):
     header = ['date', 'name', 'id', 'metricName', 'metricQuantity', 'clusterId']
 
     for file_name in csv_files:
-        with open(output_directory + os.sep + file_name + '.csv', 'a', newline='') as f:
+        with open(f'{output_directory}{os.sep}{file_name}.csv', 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
             writer.writerows(csv_files[file_name])
@@ -115,14 +115,14 @@ def _export_daily_hwm_files(csv_files, output_directory):
 
 def _validate(row, product):
     if row[2] not in product:
-        _debug('Wrong ProductId - skipping ' + str(row))
+        _debug(f'Wrong ProductId - skipping {row}')
         return False
 
     try:
         # test
         float(row[4])
     except TypeError:
-        _debug('Wrong vCPU value - skipping ' + str(row))
+        _debug(f'Wrong vCPU value - skipping {row}')
         return False
 
     return True
@@ -145,7 +145,7 @@ def main(argv):
     if argv[1]:
         output_directory = argv[1]
 
-    _info('s3_license_usage_directory = ' + s3_license_usage_directory)
+    _info(f's3_license_usage_directory = {s3_license_usage_directory}')
 
     if os.path.exists(s3_license_usage_directory) and os.path.isdir(s3_license_usage_directory):
         if not os.listdir(s3_license_usage_directory):
@@ -155,7 +155,7 @@ def main(argv):
         _info('Given s3_license_usage_directory not exists')
         sys.exit()
 
-    _info('Output directory = ' + output_directory)
+    _info(f'Output directory = {output_directory}')
 
     if os.path.exists(output_directory) and os.path.isdir(output_directory):
         if os.listdir(output_directory):
