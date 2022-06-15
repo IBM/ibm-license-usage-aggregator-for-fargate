@@ -43,7 +43,8 @@ def _read_storage(s3_license_usage_directory):
 
             for task in os.listdir(os.path.join(s3_license_usage_directory, day, product)):
                 _debug(f'Aggregation started for task - {task}')
-                _read_task(day, product, s3_license_usage_directory, task, values)
+                _read_task(
+                    day, product, s3_license_usage_directory, task, values)
                 _debug(f'Aggregation finished for task - {task}')
 
             _debug(f'Aggregation finished for product - {product}')
@@ -51,11 +52,12 @@ def _read_storage(s3_license_usage_directory):
             if values:
                 for prod in values:
                     daily_hwm = int(math.ceil(max(values[prod].values())))
-                    _debug(f'HWM calculated = {prod}  - {daily_hwm}')
-                    csv_row = [day, prod[0], prod[1], prod[2], daily_hwm, prod[3]]
+                    _debug(f'HWM calculated = {prod} - {daily_hwm}')
+                    csv_row = {"date": day, "name": prod[0], "id": prod[1],
+                               "metricName": prod[2], "metricQuantity": daily_hwm, "clusterId": prod[3]}
                     output_csv_rows.append(csv_row)
 
-        _debug('Aggregation finished for day - {day}')
+        _debug(f'Aggregation finished for day - {day}')
 
     return [output_csv_rows, start_date, end_date]
 
@@ -63,64 +65,65 @@ def _read_storage(s3_license_usage_directory):
 def _read_task(day, product, s3_license_usage_directory, task, values):
     task_path = os.path.join(s3_license_usage_directory, day, product, task)
     _debug(f'Reading file - {task_path}')
-    csvreader = csv.reader(open(task_path))
-    # skip header
-    next(csvreader)
-    # row = Timestamp,ProductName,ProductId,Metric,vCPU,ClusterId,LoggerVersion
+    csvreader = csv.DictReader(open(task_path))
+
     for row in csvreader:
 
         if not _validate(row, product):
             break
 
-        # product_unique_id = ProductName,ProductId,Metric,ClusterId
-        product_unique_id = tuple([row[1], row[2], row[3], row[5]])
+        product_unique_id = tuple(
+            [row['ProductName'], row['ProductId'], row['Metric'], row['ClusterId']])
 
         if product_unique_id not in values:
             values[product_unique_id] = {}
 
-        if row[0] in values[product_unique_id]:
-            values[product_unique_id][row[0]] += float(row[4])
+        if row['Timestamp'] in values[product_unique_id]:
+            values[product_unique_id][row['Timestamp']] += float(row['vCPU'])
         else:
-            values[product_unique_id][row[0]] = float(row[4])
+            values[product_unique_id][row['Timestamp']] = float(row['vCPU'])
 
 
 def _prepare_daily_hwm_files(csv_rows):
-    # key = name, metric, date
-    output_csv_rows = sorted(csv_rows[0], key=lambda x: (x[1], x[3], x[0]))
+    output_csv_rows = sorted(csv_rows[0], key=lambda x: (
+        x["name"], x["metricName"], x["date"]))
 
     csv_files = {}
     for row in output_csv_rows:
-        file_name = '_'.join(('products_daily', csv_rows[1], csv_rows[2], row[5].replace(':', '_').replace('/', '_')))
+        file_name = '_'.join(('products_daily', csv_rows[1], csv_rows[2], row["clusterId"].replace(
+            ':', '_').replace('/', '_')))
         _debug(f'Preparing content for filename = {file_name}')
         if file_name not in csv_files:
             csv_files[file_name] = []
-        if row[3] == 'PROCESSOR_VALUE_UNIT':
-            row[4] *= 70
+        if row["metricName"] == 'PROCESSOR_VALUE_UNIT':
+            row["metricQuantity"] *= 70
+
         csv_files[file_name].append(row)
 
     return csv_files
 
 
 def _export_daily_hwm_files(csv_files, output_directory):
-    header = ['date', 'name', 'id', 'metricName', 'metricQuantity', 'clusterId']
+    header = ['date', 'name', 'id', 'metricName',
+              'metricQuantity', 'clusterId']
 
     for file_name in csv_files:
         with open(f'{output_directory}{os.sep}{file_name}.csv', 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
+            writer = csv.DictWriter(f, fieldnames=header)
+            writer.writeheader()
             writer.writerows(csv_files[file_name])
 
     return None
 
 
 def _validate(row, product):
-    if row[2] not in product:
+    if row['ProductId'] not in product:
         _debug(f'Wrong ProductId - skipping {row}')
         return False
 
     try:
         # test
-        float(row[4])
+        float(row['vCPU'])
     except TypeError:
         _debug(f'Wrong vCPU value - skipping {row}')
         return False

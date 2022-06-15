@@ -73,7 +73,7 @@ def test_compare_results_different():
     """
     Aggr.main(["test_files/input", "test_files/output_test"])
     f = open("test_files/output_test/products_daily_2022-02-22_2022-02-24_\
-    arn_aws_ecs_eu-central-1_675801125365_cluster_testCluster2.csv", "a")
+arn_aws_ecs_eu-central-1_675801125365_cluster_testCluster2.csv", "a")
     f.write("test")
     f.close()
     assert not is_same("test_files/output_test", "test_files/output")
