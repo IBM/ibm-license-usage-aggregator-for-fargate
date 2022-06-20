@@ -1,2 +1,2 @@
-Timestamp,CloudpakName,CloudpakId,CloudpakMetric,ProductCloudpakRatio,ProductName,ProductId,Metric,vCPU,ClusterId,LoggerVersion
+Timestamp,CloudpakName,CloudpakId,CloudpakMetric,ProductCloudpakRatio,ProductName,ProductId,ProductMetric,vCPU,ClusterId,LoggerVersion
 2022-02-24T16:00:00Z,,,,,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,0.5,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster,1.0

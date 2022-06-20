@@ -1,4 +1,4 @@
-Timestamp,CloudpakName,CloudpakId,CloudpakMetric,ProductCloudpakRatio,ProductName,ProductId,Metric,vCPU,ClusterId,LoggerVersion
+Timestamp,CloudpakName,CloudpakId,CloudpakMetric,ProductCloudpakRatio,ProductName,ProductId,ProductMetric,vCPU,ClusterId,LoggerVersion
 2022-02-24T15:00:00Z,,,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,0.5,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster,1.0
 2022-02-24T15:05:00Z,,,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,0.5,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster,1.0
 2022-02-24T15:10:00Z,,,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,0.5,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster,1.0

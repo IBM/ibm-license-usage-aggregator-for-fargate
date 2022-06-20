@@ -1,9 +1,10 @@
-date,cloudpakName,cloudpakId,name,id,metricName,metricQuantity,clusterId
-2022-02-22,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,PROCESSOR_VALUE_UNIT,70,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-22,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-23,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,4,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-24,,,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-22,,,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-23,,,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-24,,,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
-2022-02-23,IBM WebSphere Hybrid Edition,6358611af04743f99f42dadcd6e39d52,IBM WebSphere Application Server,e7daacc46bbe4e2dacd2af49145a4723,VIRTUAL_PROCESSOR_CORE,8,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+date,name,id,metricName,metricQuantity,clusterId
+2022-02-22,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,PROCESSOR_VALUE_UNIT,70,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-22,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-23,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,4,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-24,IBM Liberty,3d9a130c77dc47659aa3ae22e643a650,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-22,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-23,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-24,IBM MQ,f3beb980b6ca487ea6a3db33262afa3c,VIRTUAL_PROCESSOR_CORE,2,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-22,IBM WebSphere Hybrid Edition,6358611af04743f99f42dadcd6e39d52,VIRTUAL_PROCESSOR_CORE,4,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster
+2022-02-23,IBM WebSphere Hybrid Edition,6358611af04743f99f42dadcd6e39d52,VIRTUAL_PROCESSOR_CORE,20,arn:aws:ecs:eu-central-1:675801125365:cluster/testCluster

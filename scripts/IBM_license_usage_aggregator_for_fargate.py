@@ -8,7 +8,7 @@ import datetime
 import math
 import os
 import sys
-
+from collections import Counter
 
 DEBUG = False
 
@@ -34,10 +34,12 @@ def _read_storage(s3_license_usage_directory):
     days = sorted(os.listdir(s3_license_usage_directory))
     start_date = days[0]
     end_date = days[-1]
+    
 
     for day in os.listdir(s3_license_usage_directory):
+        aggregated_cp = {}
         _info(f'Aggregation started for day - {day}')
-
+        day_cp_csv_rows = {}
         for product in os.listdir(os.path.join(s3_license_usage_directory, day)):
             _info(f'Aggregation started for product - {product}')
             values = {}
@@ -50,14 +52,40 @@ def _read_storage(s3_license_usage_directory):
 
             _debug(f'Aggregation finished for product - {product}')
 
-            if values:
-                for prod in values:
-                    daily_hwm = int(math.ceil(max(values[prod].values())))
+            for prod in values:
+                if prod[2] != "":
+                    if prod not in day_cp_csv_rows:
+                        day_cp_csv_rows[prod] = {'prod': {}, 'values': {}}
+                    day_cp_csv_rows[prod]["prod"] = prod
+                    day_cp_csv_rows[prod]["values"] = values[prod]
+                else:
+                    daily_hwm = math.ceil(max(values[prod].values()))
                     _debug(f'HWM calculated = {prod} - {daily_hwm}')
                     csv_row = {"date": day, "cloudpakMetric": prod[3], "productCloudpakRatio": prod[4],
-                               "name": prod[0], "id": prod[5], "cloudpakName": prod[1], "cloudpakId": prod[2],
-                               "metricName": prod[6], "metricQuantity": daily_hwm, "clusterId": prod[7]}
+                                "name": prod[0], "id": prod[5], "cloudpakName": prod[1], "cloudpakId": prod[2],
+                                "metricName": prod[6], "metricQuantity": daily_hwm, "clusterId": prod[7]}
                     output_csv_rows.append(csv_row)
+
+        _debug('Aggregation started for Cloudpaks')
+
+        for row in day_cp_csv_rows:
+            id_ = tuple([row[1], row[2], row[7]])
+            ratio = int(row[4].split(':')[0]) / \
+                int(row[4].split(':')[1])
+            for value in day_cp_csv_rows[row]["values"]:
+                day_cp_csv_rows[row]["values"][value] *= ratio
+            if id_ not in aggregated_cp:
+                aggregated_cp[id_] = {"values": Counter(), "prod": {}}
+            aggregated_cp[id_]["values"] += Counter(day_cp_csv_rows[row]["values"])
+            aggregated_cp[id_]["prod"] = row
+
+        for cp in aggregated_cp:
+            prod = aggregated_cp[cp]["prod"]
+            csv_row = {"date": day, "cloudpakMetric": prod[3], "productCloudpakRatio": prod[4],
+                        "name": prod[0], "id": prod[5], "cloudpakName": prod[1], "cloudpakId": prod[2],
+                        "metricName": prod[6], "metricQuantity": math.ceil(max(aggregated_cp[cp]["values"].values())),
+                        "clusterId": prod[7]}
+            output_csv_rows.append(csv_row)
 
         _debug(f'Aggregation finished for day - {day}')
 
@@ -75,7 +103,8 @@ def _read_task(day, product, s3_license_usage_directory, task, values):
             break
 
         product_unique_id = tuple([row['ProductName'], row['CloudpakName'], row['CloudpakId'],
-                                  row['CloudpakMetric'], row["ProductCloudpakRatio"], row['ProductId'], row['Metric'], row['ClusterId']])
+                                  row['CloudpakMetric'], row["ProductCloudpakRatio"],
+                                  row['ProductId'], row['ProductMetric'], row['ClusterId']])
 
         if product_unique_id not in values:
             values[product_unique_id] = {}
@@ -98,22 +127,26 @@ def _prepare_daily_hwm_files(csv_rows):
         if file_name not in csv_files:
             csv_files[file_name] = []
 
-        if row["cloudpakMetric"] != "":
-            row["metricName"] = row["cloudpakMetric"]
-            ratio = int(row["productCloudpakRatio"].split(':')[0]) / \
-                int(row["productCloudpakRatio"].split(':')[1])
-            row["metricQuantity"] = math.ceil(row["metricQuantity"] * ratio)
-
         if row["metricName"] == 'PROCESSOR_VALUE_UNIT':
             row["metricQuantity"] *= 70
+        
+        if row["cloudpakMetric"] != "":
+            row["productMetric"] = row["cloudpakMetric"]
+        
+        if row["cloudpakName"] != "":
+            row["name"] = row["cloudpakName"]
 
+        if row["cloudpakId"] != "":
+            row["id"] = row["cloudpakId"]
+        
+        row["metricQuantity"] = int(row["metricQuantity"])
         csv_files[file_name].append(row)
 
     return csv_files
 
 
 def _export_daily_hwm_files(csv_files, output_directory):
-    header = ['date', 'cloudpakName', 'cloudpakId', 'name', 'id', 'metricName',
+    header = ['date', 'name', 'id', 'metricName',
               'metricQuantity', 'clusterId']
 
     for file_name in csv_files:
@@ -127,8 +160,13 @@ def _export_daily_hwm_files(csv_files, output_directory):
 
 
 def _validate(row, product):
-    if row['ProductId'] not in product:
+    if row['ProductId'] not in product and row['ProductId'] != "":
         _debug(f'Wrong ProductId - skipping {row}')
+        return False
+
+    if (row['CloudpakId'] != "" or row['CloudpakName'] != "" or row["ProductCloudpakRatio"] != "") and \
+       (row['CloudpakId'] == "" or row['CloudpakName'] == "" or row["ProductCloudpakRatio"] == ""):
+        _debug(f'Missing Cloudpak labels - skipping {row}')
         return False
 
     try:
