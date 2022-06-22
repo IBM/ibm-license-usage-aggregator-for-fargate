@@ -2,13 +2,12 @@
 
 ## Scope
 
-AWS ECS Fargate technology allows users to deploy containers in serverless environment and the license of such software needs to be tracked. 
+AWS ECS Fargate technology allows users to deploy containers in serverless environment and the license of such software needs to be tracked.
 In case of IBM Certified Containers, license is calculated using [IBM Container Pricing](https://www.ibm.com/software/passportadvantage/containerlicenses.html)
-rules and proper license usage tracing tool needs to be used to have license 
-tracked and that can be achieved with IBM License Usage Logger for Fargate sidecar. 
-This repo provides an example of a tool for aggregation of such license usage logs. 
+rules and proper license usage tracing tool needs to be used to have license
+tracked and that can be achieved with IBM License Usage Logger for Fargate sidecar.
+This repo provides an example of a tool for aggregation of such license usage logs.
 This will allow customers to have better understanding by getting daily metrics values for given IBM products based on provided license usage logs.
-
 
 ## Requirements
 
@@ -22,14 +21,13 @@ This will allow customers to have better understanding by getting daily metrics 
 
    ```aws s3 cp s3://<S3_bucket_name>/IBM-License-usage <s3_license_usage_directory> --recursive```
 
-2. Run aggregator by
+1. Run aggregator by
 
    (Optional) Enable DEBUG mode by setting DEBUG = True inside the script.
 
    ```python scripts/IBM_license_usage_aggregator_for_fargate.py <s3_license_usage_directory> <output_directory>```
 
-4. Get csv files with daily aggregated license usage from the `output-directory`
-
+1. Get csv files with daily aggregated license usage from the `output-directory`
 
 ## Notes
 
@@ -40,14 +38,14 @@ Ideally create a topic branch for every separate change you make. For
 example:
 
 1. Fork the repo
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+1. Create your feature branch (`git checkout -b my-new-feature`)
+1. Commit your changes (`git commit -am 'Added some feature'`)
+1. Push to the branch (`git push origin my-new-feature`)
+1. Create new Pull Request
 
 ## License
 
-All source files must include a Copyright and License header. The SPDX license header is 
+All source files must include a Copyright and License header. The SPDX license header is
 preferred because it can be easily scanned.
 
 If you would like to see the detailed LICENSE click [here](LICENSE).
