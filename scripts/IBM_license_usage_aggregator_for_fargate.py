@@ -76,7 +76,7 @@ def _read_storage(s3_license_usage_directory):
             ratio = int(row[4].split(':')[0]) / \
                 int(row[4].split(':')[1])
             for value in day_cp_csv_rows[row]["values"]:
-                day_cp_csv_rows[row]["values"][value] *= ratio
+                day_cp_csv_rows[row]["values"][value] /= ratio
             if id_ not in aggregated_cp:
                 aggregated_cp[id_] = {"values": Counter(), "prod": {}}
             aggregated_cp[id_]["values"] += Counter(
